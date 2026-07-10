@@ -1,10 +1,20 @@
+import { BrowserRouter, Routes, Route } from "react-router";
+import Body from "./Body";
+import ErrorElement from "./ErrorElement";
+
+
 function App() {
   return (
     <>
-      <h1 className="text-2xl font-bold">Hello World</h1>
-      <button class="inline-block cursor-pointer rounded-md bg-gray-800 px-4 py-3 text-center text-sm font-semibold uppercase text-white transition duration-200 ease-in-out hover:bg-gray-900">
-        Button
-      </button>
+      <BrowserRouter basename="/">
+      <Routes>
+        <Route path="/" element={<Body />}>
+          <Route path="/login" element={<div>Login page</div>}/>
+          <Route path="/test" element={<div>Test page</div>}/>
+          <Route path="*" element={<ErrorElement />}/>
+        </Route>
+      </Routes>
+      </BrowserRouter>
     </>
   );
 }
