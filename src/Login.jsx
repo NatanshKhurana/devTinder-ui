@@ -1,12 +1,17 @@
 import React from "react";
 import { useState } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { addUser } from "./store/userSlice";
 
 const Login = () => {
   const [email, setEmail] = useState("natansh@khurana.com");
   const [password, setPassword] = useState("Natansh@123");
+  const dispatch = useDispatch();
 
   const handleLogin = async () => {
+    console.log("handleLogin clicked !");
+    
     try {
       const res = await axios.post(
         "http://localhost:7777/login",
@@ -18,6 +23,8 @@ const Login = () => {
           withCredentials: true,
         },
       );
+      dispatch(addUser(res.data));
+      
     } catch (err) {
       console.log("Error : " + err.message);
     }
