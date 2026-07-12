@@ -1,11 +1,36 @@
-import React from 'react'
+import React, { useEffect } from "react";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { addFeed } from "../store/feedSlice";
+import { useSelector } from "react-redux";
+import FeedCard from "./FeedCard";
 
 const Feed = () => {
-  return (
-    <div>
-      <h1 className='text-2xl font-bold'>Feed</h1>
-    </div>
-  )
-}
+  const dispatch = useDispatch();
+  const feed = useSelector((store) => store.feed);
 
-export default Feed
+  const getFeed = async () => {
+    if (feed) return;
+    try {
+      const res = await axios.get("http://localhost:7777/user/feed", {
+        withCredentials: true,
+      });
+      dispatch(addFeed(res?.data));
+    } catch (err) {
+      console.dir(err);
+    }
+  };
+  
+
+  useEffect(() => {
+    getFeed();
+  }, []);
+
+  // console.log("feed : " + feed);
+  
+  return feed && <div>
+    <FeedCard feedData = {feed[0]}/>
+  </div>;
+};
+
+export default Feed;
