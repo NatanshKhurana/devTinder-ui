@@ -7,14 +7,17 @@ import FeedCard from "./FeedCard";
 
 const Feed = () => {
   const dispatch = useDispatch();
+  const user = useSelector(store => store.user);
   const feed = useSelector((store) => store.feed);
 
   const getFeed = async () => {
-    if (feed) return;
+    // if (feed) return;
     try {
       const res = await axios.get("http://localhost:7777/user/feed", {
         withCredentials: true,
       });
+      console.log(res);
+      
       dispatch(addFeed(res?.data));
     } catch (err) {
       console.dir(err);
@@ -28,7 +31,7 @@ const Feed = () => {
 
   // console.log("feed : " + feed);
   
-  return feed && <div>
+  return feed && <div className="my-20">
     <FeedCard feedData = {feed[0]}/>
   </div>;
 };
