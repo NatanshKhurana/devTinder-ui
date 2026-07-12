@@ -12,7 +12,7 @@ const Body = () => {
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
   const fetchUser = async () => {
     try {
       if (user) return;
