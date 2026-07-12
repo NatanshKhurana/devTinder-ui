@@ -8,11 +8,12 @@ import { useNavigate } from "react-router";
 const Login = () => {
   const [email, setEmail] = useState("natansh@khurana.com");
   const [password, setPassword] = useState("Natansh@123");
+  const [error, setError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    console.log("handleLogin clicked !");
+    // console.log("handleLogin clicked !");
     
     try {
       const res = await axios.post(
@@ -29,7 +30,8 @@ const Login = () => {
       navigate("/")
       
     } catch (err) {
-      console.log("Error : " + err.message);
+      // console.dir(err);
+      setError(err.response?.data || "Something went wrong");
     }
   };
   return (
@@ -59,6 +61,7 @@ const Login = () => {
               />
             </fieldset>
           </div>
+          <p className="font-light text-sm text-red-700">{error}</p>
           <div className="card-actions justify-center mt-4">
             <button className="btn btn-primary" onClick={handleLogin}>
               Login
