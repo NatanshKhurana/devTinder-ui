@@ -29,7 +29,10 @@ const Feed = () => {
     getFeed();
   }, []);
 
-  // console.log("feed : " + feed);
+  // console.log(feed);
+  
+  if(!feed) return "";
+  if(feed.length === 0) return <div className="text-center text-lg mt-20">No feed for now !!</div>
   
   return feed && <div className="my-20">
     <FeedCard feedData = {feed[0]}/>
