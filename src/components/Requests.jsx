@@ -16,7 +16,7 @@ const Requests = () => {
         {},
         { withCredentials: true },
       );
-      console.log(res);
+    //   console.log(res);
       dispatch(clearRequest(_id));
     } catch (err) {
       console.dir(err);

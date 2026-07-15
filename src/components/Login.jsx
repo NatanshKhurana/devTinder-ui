@@ -6,15 +6,33 @@ import { addUser } from "../store/userSlice";
 import { useNavigate } from "react-router";
 
 const Login = () => {
-  const [email, setEmail] = useState("natansh@khurana.com");
-  const [password, setPassword] = useState("Natansh@123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [isLogin, setIsLogin] = useState(false);
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const handleSignup = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:7777/signup",
+        { firstName, lastName, email, password },
+        { withCredentials: true },
+      );
+      // console.log(res?.data?.data);
+      dispatch(addUser(res?.data?.data));
+      navigate("/profile");
+    } catch (err) {
+      console.dir(err);
+    }
+  };
+
   const handleLogin = async () => {
     // console.log("handleLogin clicked !");
-    
+
     try {
       const res = await axios.post(
         "http://localhost:7777/login",
@@ -27,8 +45,7 @@ const Login = () => {
         },
       );
       dispatch(addUser(res.data));
-      navigate("/")
-      
+      navigate("/");
     } catch (err) {
       // console.dir(err);
       setError(err.response?.data || "Something went wrong");
@@ -38,8 +55,34 @@ const Login = () => {
     <div className="flex justify-center my-10">
       <div className="card card-border bg-base-100 w-96">
         <div className="card-body">
-          <h2 className="card-title flex justify-center">Login</h2>
+          <h2 className="card-title flex justify-center">
+            {isLogin ? "Login" : "Sign Up"}
+          </h2>
           <div>
+            {!isLogin && (
+              <>
+                <fieldset className="fieldset">
+                  <legend className="fieldset-legend">First Name : </legend>
+                  <input
+                    type="text"
+                    className="input"
+                    placeholder="Type here"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                </fieldset>
+                <fieldset className="fieldset">
+                  <legend className="fieldset-legend">LastName : </legend>
+                  <input
+                    type="text"
+                    className="input"
+                    placeholder="Type here"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </fieldset>
+              </>
+            )}
             <fieldset className="fieldset">
               <legend className="fieldset-legend">Email : </legend>
               <input
@@ -63,10 +106,34 @@ const Login = () => {
           </div>
           <p className="font-light text-sm text-red-700">{error}</p>
           <div className="card-actions justify-center mt-4">
-            <button className="btn btn-primary" onClick={handleLogin}>
-              Login
+            <button
+              className="btn btn-primary"
+              onClick={isLogin ? handleLogin : handleSignup}
+            >
+              {isLogin ? "Login" : "Register"}
             </button>
           </div>
+          {isLogin ? (
+            <p className="text-lg text-center mt-4">
+              New user ?{" "}
+              <span
+                className="text-primary cursor-pointer hover:underline"
+                onClick={() => setIsLogin(false)}
+              >
+                Register here
+              </span>
+            </p>
+          ) : (
+            <p className="text-lg text-center mt-4">
+              Already a user ?{" "}
+              <span
+                className="text-primary cursor-pointer hover:underline"
+                onClick={() => setIsLogin(true)}
+              >
+                login
+              </span>
+            </p>
+          )}
         </div>
       </div>
     </div>
