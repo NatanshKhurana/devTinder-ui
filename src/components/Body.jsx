@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../store/userSlice";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
+import { BASE_URL } from "../utils/constansts";
 
 const Body = () => {
   const user = useSelector((store) => store.user);
@@ -16,7 +17,7 @@ const Body = () => {
   const fetchUser = async () => {
     try {
       if (user) return;
-      const res = await axios.get("http://localhost:7777/profile/view", {
+      const res = await axios.get(BASE_URL + "/profile/view", {
         withCredentials: true,
       });
       // console.log(res);
