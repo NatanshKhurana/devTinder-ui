@@ -19,7 +19,7 @@ const EditProfile = ({ userData }) => {
 
   const handleEditProfile = async () => {
     try {
-      const res = await axios.patch(
+      const res = await axios.put(
         BASE_URL+"/profile/edit",
         { firstName, lastName, age, gender, about, photoUrl },
         { withCredentials: true },

@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { addConnections } from "../store/connectionSlice";
 import { useSelector } from "react-redux";
 import { BASE_URL } from "../utils/constansts";
+import { Link } from "react-router";
 
 const Connections = () => {
   const connections = useSelector((store) => store.connection);
@@ -13,7 +14,7 @@ const Connections = () => {
       const res = await axios.get(BASE_URL + "/user/connections", {
         withCredentials: true,
       });
-      //   console.log(res.data);
+        // console.log(res.data);
       dispatch(addConnections(res.data));
     } catch (err) {
       console.dir(err);
@@ -47,6 +48,9 @@ const Connections = () => {
               <h2 className="card-title">{connection.firstName} {connection.lastName}</h2>
               {connection.age && connection.gender && <p>{connection.age} - {connection.gender}</p>}
               {connection.about && <p>{connection.about}</p>}
+            </div>
+            <div>
+              <Link to={"/chat/" + connection._id} className="bg-secondary p-3 rounded">Chat</Link>
             </div>
           </div>
         );
