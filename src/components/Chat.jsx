@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { createSocketConnection } from "../store/socket";
 import { useSelector } from "react-redux";
+import axios from "axios";
+import { BASE_URL } from "../utils/constansts";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -10,6 +12,22 @@ const Chat = () => {
   const user = useSelector((store) => store.user);
   const userId = user?._id;
   //   console.log(userId);
+
+  const fetchChatMessages = async () => {
+    try {
+      const chats = await axios.get(BASE_URL + "/chat/" + targetUserId, {
+        withCredentials: true,
+      });
+      console.log(chats);
+      setMessages(chats?.data?.messages);
+    } catch (err) {
+      console.log("axios error");
+    }
+  };
+
+  useEffect(() => {
+    fetchChatMessages();
+  }, []);
 
   useEffect(() => {
     if (!user) {
@@ -25,7 +43,16 @@ const Chat = () => {
     });
 
     socket.on("messageReceived", ({ firstName, text }) => {
-      setMessages((messages) => [...messages, { firstName, text }]);
+      setMessages((messages) => [
+        ...messages,
+        {
+          senderId: {
+            firstName,
+            _id: userId,
+          },
+          text,
+        },
+      ]);
     });
 
     return () => {
@@ -52,10 +79,10 @@ const Chat = () => {
       </div>
       <div className="overflow-scroll flex-1 p-5">
         {messages.map((message, index) => {
-          return user.firstName === message.firstName ? (
+          return user.firstName === message?.senderId?.firstName ? (
             <div key={index} className="chat chat-end">
               <div className="chat-header">
-                {message.firstName}
+                {message.senderId.firstName}
                 <time className="text-xs opacity-50">2 hours ago</time>
               </div>
               <div className="chat-bubble">{message.text}</div>
@@ -64,7 +91,7 @@ const Chat = () => {
           ) : (
             <div key={index} className="chat chat-start">
               <div className="chat-header">
-                {message.firstName}
+                {message.senderId.firstName}
                 <time className="text-xs opacity-50">2 hours ago</time>
               </div>
               <div className="chat-bubble">{message.text}</div>
